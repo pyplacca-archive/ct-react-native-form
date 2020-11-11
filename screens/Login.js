@@ -24,6 +24,7 @@ class LoginScreen extends React.Component {
 	};
 
 	render () {
+
 		return (
 			<ScrollView
 				showsVerticalScrollIndicator={false}
@@ -40,6 +41,7 @@ class LoginScreen extends React.Component {
 				}}>
 					Log in
 				</Text>
+
 				{/* form inputs */}
 				<TextInput
 					placeholder="Username"
@@ -68,6 +70,7 @@ class LoginScreen extends React.Component {
 				]}>
 					Forgot password?
 				</Text>
+
 				{/* Login button */}
 				<TouchableOpacity style={[
 					styles.allCenter, {
@@ -85,7 +88,8 @@ class LoginScreen extends React.Component {
 						Log in
 					</Text>
 				</TouchableOpacity>
-				{/* the rest */}
+
+				{/* bottom text */}
 				<View style={[
 					styles.allCenter, {
 						flexDirection: 'row',
