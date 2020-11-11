@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-	ScrollView,
-	View,
-	TextInput,
-	Text,
-	TouchableOpacity
-} from 'react-native';
+import { ScrollView, View, TextInput, Text, TouchableOpacity } from 'react-native';
 
 
 const variables = {
