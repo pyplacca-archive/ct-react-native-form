@@ -1,12 +1,19 @@
 import React from 'react';
-import { StatusBar, StyleSheet, Text, View } from 'react-native';
-import LoginScreen from './screens/Login'
+import {store} from "./store";
+import { Provider } from "react-redux";
+import { NavigationContainer } from "react-navigation/native";
+import { createStackNavigator } from "react-navigation/stack";
+// import { PersistGate } from "redux/persist/"
+
+const Stack = createStackNavigator();
 
 export default function App() {
 	return (
-		<View>
-			<StatusBar style="auto" />
-			<LoginScreen />
-		</View>
+		<Provider store={store}>
+			<NavigationContainer>
+				<Stack.Navigator>
+				</Stack.Navigator>
+			</NavigationContainer>
+		</Provider>
 	);
-}
+};
