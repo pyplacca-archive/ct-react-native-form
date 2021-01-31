@@ -1,8 +1,6 @@
 import React from 'react';
-import { connect } from "react-redux";
-import {
-	ScrollView, View, TextInput, Text, Pressable, ActivityIndicator
-} from 'react-native';
+import { ScrollView, View, TextInput, Text, Pressable, ActivityIndicator } from 'react-native';
+import { connect } from 'react-redux';
 import firebase from "../config/firebase";
 
 
@@ -11,30 +9,40 @@ const variables = {
 	spacing: 25
 };
 
-class LoginScreen extends React.Component {
+class SignupScreen extends React.Component {
+
 	constructor(props) {
 		super(props);
 
 		this.state = {
+			username: '',
 			email: '',
 			password: '',
+			password2: '',
+			error: '',
 			loading: false,
-			error: null
 		};
 	};
 
-	logIn = async () => {
-		this.setState({loading: true})
-		const {email, password} = this.state;
-		try {
-			const user = await firebase
-				.auth()
-				.signInWithEmailAndPassword(email, password)
-			this.props.dispatch({type: "SIGN_IN", payload: user})
-		} catch (err) {
-			this.setState({error: err.message})
-		} finally {
-			this.setState({loading: false})
+	signUp = () => {
+		this.setState({loading: true});
+		const cred = this.state;
+
+		if (cred.password !== cred.password2) {
+			this.setState(() => ({
+				error: "Passwords do not match",
+				loading: false
+			}))
+		} else {
+			firebase
+			.auth()
+			.createUserWithEmailAndPassword(cred.email, cred.password)
+			.then(({user}) => this.props.dispatch({
+				type: 'SIGN_IN',
+				payload: user
+			}))
+			.catch(err => this.setState({error: err.message}))
+			.finally(() => this.setState({loading: false}))
 		}
 	}
 
@@ -53,7 +61,7 @@ class LoginScreen extends React.Component {
 					fontSize: 40,
 					fontWeight: 'bold'
 				}}>
-					Log in
+					Sign up
 				</Text>
 
 				{/* error message display */}
@@ -61,13 +69,24 @@ class LoginScreen extends React.Component {
 
 				{/* form inputs */}
 				<TextInput
+					placeholder="Username"
+					value={this.state.username}
+					onChangeText={username => this.setState({username})}
+					style={[
+						styles.input,
+						styles.text, {
+							marginBottom: variables.spacing * 2
+						}
+					]}
+				/>
+				<TextInput
 					placeholder="Email"
 					value={this.state.email}
 					onChangeText={email => this.setState({email})}
 					style={[
 						styles.input,
 						styles.text, {
-							marginBottom: variables.spacing
+							marginBottom: variables.spacing * 2
 						}
 					]}
 				/>
@@ -76,19 +95,22 @@ class LoginScreen extends React.Component {
 					value={this.state.password}
 					secureTextEntry={true}
 					onChangeText={password => this.setState({password})}
+					style={[
+						styles.input,
+						styles.text, {
+							marginBottom: variables.spacing * 2
+						}
+					]}
+				/>
+				<TextInput
+					placeholder="Password again"
+					value={this.state.password2}
+					secureTextEntry={true}
+					onChangeText={password2 => this.setState({password2})}
 					style={[styles.text, styles.input]}
 				/>
-				<Text style={[
-					styles.text, {
-						color: '#62aaff',
-						alignSelf: 'flex-end',
-						marginVertical: 10,
-					}
-				]}>
-					Forgot password?
-				</Text>
 
-				{/* Login button */}
+				{/* Signup button */}
 				<Pressable
 					style={[
 						styles.allCenter, {
@@ -96,21 +118,20 @@ class LoginScreen extends React.Component {
 							marginVertical: variables.spacing * 2,
 							backgroundColor: variables.primeColor,
 							borderRadius: 10,
-							flexDirection: 'row',
 						}
 					]}
-					onPress={this.logIn}
+					onPress={this.signUp}
 				>
 					{
 						this.state.loading ? (
-							<ActivityIndicator color="#fff" style={{marginLeft: 10}}/>
+							<ActivityIndicator color="#fff"/>
 						) : (
 							<Text style={{
 								color: '#fff',
 								fontSize: 20,
 								fontWeight: 'bold',
 							}}>
-								LOG IN
+								SIGN UP
 							</Text>
 						)
 					}
@@ -122,15 +143,16 @@ class LoginScreen extends React.Component {
 						flexDirection: 'row',
 					}
 				]}>
-					<Text style={styles.text}>Don't have an account?</Text>
-					<Pressable onPress={() => this.props.navigation.navigate('sign-up')}>
+					<Text style={styles.text}>You already have an account?</Text>
+					<Pressable onPress={() => this.props.navigation.navigate('log-in')}>
 						<Text style={[
 							styles.text, {
 								marginLeft: 7,
 								color: variables.primeColor,
+								fontWeight: 'bold'
 							}
 						]}>
-							Sign up
+							Log in
 						</Text>
 					</Pressable>
 				</View>
@@ -157,4 +179,4 @@ const styles = {
 };
 
 
-export default connect()(LoginScreen);
+export default connect()(SignupScreen);

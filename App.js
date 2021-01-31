@@ -1,19 +1,18 @@
 import React from 'react';
-import {store} from "./store";
 import { Provider } from "react-redux";
-import { NavigationContainer } from "react-navigation/native";
-import { createStackNavigator } from "react-navigation/stack";
-// import { PersistGate } from "redux/persist/"
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "./src/store";
+import AppNavigator from "./src/AppNavigator";
 
-const Stack = createStackNavigator();
 
-export default function App() {
+function App () {
 	return (
 		<Provider store={store}>
-			<NavigationContainer>
-				<Stack.Navigator>
-				</Stack.Navigator>
-			</NavigationContainer>
+			<PersistGate persistor={persistor}>
+				<AppNavigator/>
+			</PersistGate>
 		</Provider>
 	);
 };
+
+export default App;
